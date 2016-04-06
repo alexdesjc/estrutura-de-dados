@@ -1,26 +1,48 @@
 import unittest
 
-
 def _quick_recursivo(seq, inicio, final):
     if inicio >= final:
         return seq
     indice_pivot = final
-    pivot = seq[-1]
+    pivot = seq[indice_pivot]
     i_esquerda = inicio
     i_direita = final - 1
 
-    # posicionar pivot
+    #posicionando pivot
+    while i_esquerda <= i_direita:
 
-    # Resolver para sublista da esquerda
+        while seq[i_direita] >= pivot and i_esquerda <= i_direita:
+            i_direita -= 1
 
-    # Resolver para sublista da direita
+        while seq[i_esquerda] <= pivot and i_esquerda <= i_direita:
+            i_esquerda += 1
+
+        if i_direita > i_esquerda:
+            seq[i_direita], seq[i_esquerda] = seq[i_esquerda], seq[i_direita]
+
+    _fim = i_esquerda - 1
+    _inicio = i_esquerda + 1
+    seq[final], seq[i_esquerda] = seq[i_esquerda], seq[final]
+
+     # Resolvendo para sublista da esquerda
+    _quick_recursivo(seq, inicio, _fim)
+
+     # Resolvendo para sublista da direita
+    _quick_recursivo(seq, _inicio, final)
 
     return seq
 
 
 def quick_sort(seq):
+    '''
+    Análise de Complexidade:
+    O quickSort roda em o de n ao quadrado em tempo de execução (no pior caso),
+    o de n * log de n no melhor caso e o de log de n em memória
+    '''
     return _quick_recursivo(seq, 0, len(seq) - 1)
 
+def quick_sort(seq):
+    return _quick_recursivo(seq, 0, len(seq) - 1)
 
 class OrdenacaoTestes(unittest.TestCase):
     def teste_lista_vazia(self):
@@ -40,7 +62,3 @@ class OrdenacaoTestes(unittest.TestCase):
 
     def teste_lista_so_com_elementos_repetidos(self):
         self.assertListEqual([9, 9, 9], quick_sort([9, 9, 9]))
-
-
-if __name__ == '__main__':
-    unittest.main()
